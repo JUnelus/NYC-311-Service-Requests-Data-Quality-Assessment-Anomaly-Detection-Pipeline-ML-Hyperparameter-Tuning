@@ -1,24 +1,54 @@
-import pandas as pd
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import OneHotEncoder
+from __future__ import annotations
+
 import itertools
-import numpy as np
-import os
 import csv
+import json
+
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.ensemble import IsolationForest
 
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-csv_path = os.path.join(project_root, "data", "nyc311_sample.csv")
-log_path = os.path.join(project_root, "data", "hyperparam_search_results.csv")
-plot_path = os.path.join(project_root, "data", "anomaly_score_hist.png")
+try:
+    from scripts.pipeline_utils import (
+        DEFAULT_BEST_PARAMS_PATH,
+        DEFAULT_RAW_DATA_PATH,
+        DEFAULT_TUNING_LOG_PATH,
+        DEFAULT_TUNING_PLOT_PATH,
+        ensure_parent_dir,
+        load_dataset,
+        prepare_model_matrix,
+        resolve_project_path,
+    )
+except ModuleNotFoundError:
+    from pipeline_utils import (
+        DEFAULT_BEST_PARAMS_PATH,
+        DEFAULT_RAW_DATA_PATH,
+        DEFAULT_TUNING_LOG_PATH,
+        DEFAULT_TUNING_PLOT_PATH,
+        ensure_parent_dir,
+        load_dataset,
+        prepare_model_matrix,
+        resolve_project_path,
+    )
 
-def tune_hyperparams(input_csv):
-    df = pd.read_csv(input_csv)
-    features = ['agency', 'complaint_type', 'location_type', 'borough', 'incident_zip']
-    features = [f for f in features if f in df.columns]
-    df_features = df[features].astype(str).fillna("missing")
-    encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
-    X = encoder.fit_transform(df_features)
+
+def tune_hyperparams(
+    input_csv=DEFAULT_RAW_DATA_PATH,
+    log_csv=DEFAULT_TUNING_LOG_PATH,
+    plot_file=DEFAULT_TUNING_PLOT_PATH,
+    best_params_file=DEFAULT_BEST_PARAMS_PATH,
+):
+    df = load_dataset(input_csv)
+    X, feature_info = prepare_model_matrix(df)
+
+    log_path = resolve_project_path(log_csv, DEFAULT_TUNING_LOG_PATH)
+    plot_path = resolve_project_path(plot_file, DEFAULT_TUNING_PLOT_PATH)
+    best_params_path = resolve_project_path(best_params_file, DEFAULT_BEST_PARAMS_PATH)
+    ensure_parent_dir(log_path)
+    ensure_parent_dir(plot_path)
+    ensure_parent_dir(best_params_path)
 
     param_grid = {
         "n_estimators": [50, 100],
@@ -29,38 +59,75 @@ def tune_hyperparams(input_csv):
     keys, values = zip(*param_grid.items())
     best_score = -np.inf
     best_params = None
+    best_summary = None
+    best_model = None
 
-    # Open the CSV file for logging
     with open(log_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['n_estimators', 'max_samples', 'contamination', 'mean_anomaly_score'])
+        writer.writerow([
+            'n_estimators',
+            'max_samples',
+            'contamination',
+            'mean_anomaly_score',
+            'score_std',
+            'score_gap_p50_p01',
+            'predicted_anomaly_rate',
+        ])
 
         print("Tuning IsolationForest params (manual grid search):")
         for v in itertools.product(*values):
             params = dict(zip(keys, v))
             model = IsolationForest(**params, random_state=42)
             model.fit(X)
-            score = model.score_samples(X).mean()
-            print(f"Params: {params} | Mean anomaly score: {score:.4f}")
-            writer.writerow([params['n_estimators'], params['max_samples'], params['contamination'], score])
-            if score > best_score:
-                best_score = score
+            scores = model.score_samples(X)
+            mean_score = float(scores.mean())
+            score_std = float(scores.std())
+            score_gap = float(np.percentile(scores, 50) - np.percentile(scores, 1))
+            anomaly_rate = float((model.predict(X) == -1).mean())
+
+            print(
+                f"Params: {params} | Mean anomaly score: {mean_score:.4f} | "
+                f"Score gap (P50-P01): {score_gap:.4f} | Predicted anomaly rate: {anomaly_rate:.4%}"
+            )
+            writer.writerow([
+                params['n_estimators'],
+                params['max_samples'],
+                params['contamination'],
+                mean_score,
+                score_std,
+                score_gap,
+                anomaly_rate,
+            ])
+            if score_gap > best_score:
+                best_score = score_gap
                 best_params = params
-                best_model = model  # Save the best model
+                best_model = model
+                best_summary = {
+                    "feature_info": feature_info,
+                    "mean_anomaly_score": mean_score,
+                    "score_std": score_std,
+                    "score_gap_p50_p01": score_gap,
+                    "predicted_anomaly_rate": anomaly_rate,
+                }
 
-    print(f"\nBest Params: {best_params} | Best mean anomaly score: {best_score:.4f}")
+    print(f"\nBest Params: {best_params} | Best score gap (P50-P01): {best_score:.4f}")
 
-    # After grid search, plot the anomaly scores of the best model
+    with open(best_params_path, "w", encoding="utf-8") as best_params_handle:
+        json.dump({"best_params": best_params, **best_summary}, best_params_handle, indent=2)
+
     scores = best_model.score_samples(X)
     plt.hist(scores, bins=50)
     plt.title("Distribution of Isolation Forest Anomaly Scores (Best Params)")
     plt.xlabel("Anomaly Score")
     plt.ylabel("Frequency")
+    plt.tight_layout()
     plt.savefig(plot_path)
+    plt.close()
     print(f"Histogram saved to: {plot_path}")
-    plt.show()
+    print(f"Best parameter summary saved to: {best_params_path}")
 
     return best_params
 
+
 if __name__ == "__main__":
-    tune_hyperparams(csv_path)
+    tune_hyperparams()

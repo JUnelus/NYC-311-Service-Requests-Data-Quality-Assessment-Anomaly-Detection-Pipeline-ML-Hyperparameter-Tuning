@@ -3,4 +3,4 @@ scikit-learn
 numpy
 requests
 matplotlib
-apache-airflow
+apache-airflow; platform_system != "Windows"

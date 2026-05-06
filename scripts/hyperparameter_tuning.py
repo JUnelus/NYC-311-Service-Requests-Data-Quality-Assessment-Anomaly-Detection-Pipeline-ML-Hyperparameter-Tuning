@@ -62,8 +62,8 @@ def tune_hyperparams(
     best_summary = None
     best_model = None
 
-    with open(log_path, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
+    with open(log_path, 'w', encoding='utf-8', newline='') as csvfile:
+        writer = csv.writer(csvfile, lineterminator='\n')
         writer.writerow([
             'n_estimators',
             'max_samples',
@@ -112,7 +112,7 @@ def tune_hyperparams(
 
     print(f"\nBest Params: {best_params} | Best score gap (P50-P01): {best_score:.4f}")
 
-    with open(best_params_path, "w", encoding="utf-8") as best_params_handle:
+    with open(best_params_path, "w", encoding="utf-8", newline="\n") as best_params_handle:
         json.dump({"best_params": best_params, **best_summary}, best_params_handle, indent=2)
 
     scores = best_model.score_samples(X)

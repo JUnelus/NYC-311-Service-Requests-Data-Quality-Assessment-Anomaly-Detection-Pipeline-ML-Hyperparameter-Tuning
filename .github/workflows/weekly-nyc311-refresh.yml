@@ -6,13 +6,20 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - README.md
+      - data/**
   workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: write
 
 jobs:
   refresh-data-and-readme:
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:

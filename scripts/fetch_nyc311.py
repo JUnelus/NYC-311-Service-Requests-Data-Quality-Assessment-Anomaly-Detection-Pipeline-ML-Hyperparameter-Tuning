@@ -25,7 +25,7 @@ def fetch_nyc311(limit=DEFAULT_LIMIT, output_csv=None, timeout=30):
     df = df[[col for col in cols if col in df.columns]]
     csv_path = resolve_project_path(output_csv, DEFAULT_RAW_DATA_PATH)
     ensure_parent_dir(csv_path)
-    df.to_csv(csv_path, index=False)
+    df.to_csv(csv_path, index=False, lineterminator="\n")
     print(f"Fetched and saved {len(df)} records to {csv_path}.")
     return df
 

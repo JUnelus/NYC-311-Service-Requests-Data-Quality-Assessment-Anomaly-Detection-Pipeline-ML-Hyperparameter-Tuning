@@ -39,7 +39,7 @@ def profile_data(path=DEFAULT_RAW_DATA_PATH, report_path=DEFAULT_QUALITY_REPORT_
     }
 
     ensure_parent_dir(output_report_path)
-    with open(output_report_path, "w", encoding="utf-8") as report_file:
+    with open(output_report_path, "w", encoding="utf-8", newline="\n") as report_file:
         json.dump(report, report_file, indent=2)
 
     print("Data shape:", df.shape)

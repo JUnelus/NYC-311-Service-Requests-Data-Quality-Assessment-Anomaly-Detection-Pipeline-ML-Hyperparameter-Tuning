@@ -146,7 +146,8 @@ def update_readme() -> None:
     else:
         updated = readme_text.rstrip() + "\n\n" + generated_section + "\n"
 
-    README_PATH.write_text(updated, encoding="utf-8")
+    with README_PATH.open("w", encoding="utf-8", newline="\n") as readme_handle:
+        readme_handle.write(updated)
     print(f"README updated: {README_PATH}")
 
 

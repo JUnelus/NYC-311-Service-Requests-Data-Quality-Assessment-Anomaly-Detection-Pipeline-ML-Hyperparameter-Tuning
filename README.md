@@ -6,7 +6,7 @@ This project is designed to demonstrate practical data engineering skills across
 
 ## Why this project matters
 
-Public service request data is high-volume, semi-structured, and operationally noisy. A reliable pipeline for this type of dataset should do more than just ingest records — it should also:
+Public service request data is high-volume, semi-structured, and operationally noisy. A reliable pipeline for this type of dataset should do more than ingest records — it should also:
 
 - validate data quality before downstream use
 - surface missingness and distribution shifts
@@ -118,7 +118,7 @@ nyc311_sample.csv
 
 This repository includes a scheduled workflow at `.github/workflows/weekly-nyc311-refresh.yml` that:
 
-- runs every week and can also be started manually
+- it runs every week and can also be started manually
 - executes the full pipeline (`scripts/run_pipeline.py`)
 - rebuilds the README report snapshot (`scripts/update_readme_report.py`)
 - commits refreshed report artifacts back to the repository
@@ -146,13 +146,13 @@ _Last updated: 2026-05-06 00:56 UTC_
 - Score gap (P50-P01): 0.0308
 
 #### Hyperparameter search top runs (`data/hyperparam_search_results.csv`)
-| Rank | n_estimators | max_samples | contamination | score_gap_p50_p01 | predicted_anomaly_rate |
-|---:|---:|---:|---:|---:|---:|
-| 1 | 50 | auto | 0.01 | 0.030774745908464907 | 0.01 |
-| 2 | 50 | auto | 0.05 | 0.030774745908464907 | 0.05 |
-| 3 | 50 | 0.9 | 0.01 | 0.02470181588996212 | 0.01 |
-| 4 | 50 | 0.9 | 0.05 | 0.02470181588996212 | 0.05 |
-| 5 | 50 | 0.7 | 0.01 | 0.024524398105946255 | 0.01 |
+| Rank | n_estimators | max_samples | contamination |    score_gap_p50_p01 | predicted_anomaly_rate |
+|-----:|-------------:|------------:|--------------:|---------------------:|-----------------------:|
+|    1 |           50 |        auto |          0.01 | 0.030774745908464907 |                   0.01 |
+|    2 |           50 |        auto |          0.05 | 0.030774745908464907 |                   0.05 |
+|    3 |           50 |         0.9 |          0.01 |  0.02470181588996212 |                   0.01 |
+|    4 |           50 |         0.9 |          0.05 |  0.02470181588996212 |                   0.05 |
+|    5 |           50 |         0.7 |          0.01 | 0.024524398105946255 |                   0.01 |
 
 #### Anomaly score distribution (`data/anomaly_score_hist.png`)
 ![Latest anomaly score histogram](data/anomaly_score_hist.png)

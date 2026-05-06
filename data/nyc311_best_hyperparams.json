@@ -23,8 +23,8 @@
       "resolution_hours"
     ]
   },
-  "mean_anomaly_score": -0.32540072937672065,
-  "score_std": 0.01164031882075202,
-  "score_gap_p50_p01": 0.034745529829503796,
+  "mean_anomaly_score": -0.321704506132074,
+  "score_std": 0.010571600577540464,
+  "score_gap_p50_p01": 0.029682558539338988,
   "predicted_anomaly_rate": 0.01
 }

@@ -1,0 +1,68 @@
+name: Weekly NYC311 Data Refresh
+
+on:
+  schedule:
+    - cron: "0 10 * * 1"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-data-and-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn numpy requests matplotlib
+
+      - name: Run data pipeline
+        run: python scripts/run_pipeline.py
+
+      - name: Refresh README report block
+        run: python scripts/update_readme_report.py
+
+      - name: Commit refreshed artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add README.md
+          git add data/nyc311_sample.csv
+          git add data/nyc311_quality_report.json
+          git add data/nyc311_anomalies.csv
+          git add data/hyperparam_search_results.csv
+          git add data/nyc311_best_hyperparams.json
+          git add data/anomaly_score_hist.png
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          allowed_files='README.md data/nyc311_sample.csv data/nyc311_quality_report.json data/nyc311_anomalies.csv data/hyperparam_search_results.csv data/nyc311_best_hyperparams.json data/anomaly_score_hist.png'
+          while IFS= read -r file; do
+            if ! echo " $allowed_files " | grep -q " $file "; then
+              echo "Unexpected changed file in staged set: $file"
+              exit 1
+            fi
+          done < <(git diff --cached --name-only)
+
+          git commit -m "chore: weekly NYC 311 report refresh"
+          git push
+

@@ -91,14 +91,14 @@ nyc311_sample.csv
 
 ## Repository outputs
 
-| Artifact | Purpose |
-|---|---|
-| `data/nyc311_sample.csv` | Raw working dataset pulled from the API |
-| `data/nyc311_quality_report.json` | Structured profiling report for data quality checks |
-| `data/nyc311_anomalies.csv` | Records flagged as anomalous, including anomaly scores |
-| `data/hyperparam_search_results.csv` | Logged tuning experiments and evaluation metrics |
-| `data/nyc311_best_hyperparams.json` | Best-performing model configuration summary |
-| `data/anomaly_score_hist.png` | Distribution of anomaly scores for the selected model |
+| Artifact                             | Purpose                                                |
+|--------------------------------------|--------------------------------------------------------|
+| `data/nyc311_sample.csv`             | Raw working dataset pulled from the API                |
+| `data/nyc311_quality_report.json`    | Structured profiling report for data quality checks    |
+| `data/nyc311_anomalies.csv`          | Records flagged as anomalous, including anomaly scores |
+| `data/hyperparam_search_results.csv` | Logged tuning experiments and evaluation metrics       |
+| `data/nyc311_best_hyperparams.json`  | Best-performing model configuration summary            |
+| `data/anomaly_score_hist.png`        | Distribution of anomaly scores for the selected model  |
 
 ## Tech stack
 
@@ -113,6 +113,50 @@ nyc311_sample.csv
 ## Data source
 
 - [NYC 311 Service Requests API](https://data.cityofnewyork.us/resource/erm2-nwe9.json)
+
+## Automated weekly refresh (GitHub Actions)
+
+This repository includes a scheduled workflow at `.github/workflows/weekly-nyc311-refresh.yml` that:
+
+- runs every week and can also be started manually
+- executes the full pipeline (`scripts/run_pipeline.py`)
+- rebuilds the README report snapshot (`scripts/update_readme_report.py`)
+- commits refreshed report artifacts back to the repository
+
+<!-- AUTO_REPORT_START -->
+### Weekly Automated Report Snapshot
+_Last updated: 2026-05-06 00:41 UTC_
+
+#### Data quality report (`data/nyc311_quality_report.json`)
+- Row count: 10,000
+- Column count: 12
+- Duplicate rows: 0
+- Top complaint types:
+- Illegal Parking: 1,936
+- Noise - Residential: 1,734
+- Noise - Street/Sidewalk: 832
+- HEAT/HOT WATER: 588
+- Blocked Driveway: 508
+
+#### Best hyperparameters (`data/nyc311_best_hyperparams.json`)
+- n_estimators: 50
+- max_samples: auto
+- contamination: 0.0100
+- Predicted anomaly rate: 0.0100
+- Score gap (P50-P01): 0.0347
+
+#### Hyperparameter search top runs (`data/hyperparam_search_results.csv`)
+| Rank | n_estimators | max_samples | contamination | score_gap_p50_p01 | predicted_anomaly_rate |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 50 | auto | 0.01 | 0.034745529829503796 | 0.01 |
+| 2 | 50 | auto | 0.05 | 0.034745529829503796 | 0.05 |
+| 3 | 100 | auto | 0.01 | 0.026753816892370053 | 0.01 |
+| 4 | 100 | auto | 0.05 | 0.026753816892370053 | 0.05 |
+| 5 | 50 | 0.9 | 0.01 | 0.022836784055237702 | 0.01 |
+
+#### Anomaly score distribution (`data/anomaly_score_hist.png`)
+![Latest anomaly score histogram](data/anomaly_score_hist.png)
+<!-- AUTO_REPORT_END -->
 
 ## How to run
 
@@ -131,6 +175,12 @@ python scripts\fetch_nyc311.py
 python scripts\data_quality_check.py
 python scripts\ml_anomaly_detection.py
 python scripts\hyperparameter_tuning.py
+```
+
+To refresh the README report block from the latest generated artifacts:
+
+```powershell
+python scripts\update_readme_report.py
 ```
 
 ### Airflow execution

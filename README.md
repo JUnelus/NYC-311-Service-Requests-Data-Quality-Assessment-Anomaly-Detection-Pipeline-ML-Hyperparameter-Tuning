@@ -125,34 +125,34 @@ This repository includes a scheduled workflow at `.github/workflows/weekly-nyc31
 
 <!-- AUTO_REPORT_START -->
 ### Weekly Automated Report Snapshot
-_Last updated: 2026-05-06 01:06 UTC_
+_Last updated: 2026-05-11 11:05 UTC_
 
 #### Data quality report (`data/nyc311_quality_report.json`)
 - Row count: 10,000
 - Column count: 12
 - Duplicate rows: 0
 - Top complaint types:
-- Noise - Residential: 1,893
-- Illegal Parking: 1,860
-- Noise - Street/Sidewalk: 758
-- HEAT/HOT WATER: 635
-- Blocked Driveway: 539
+- Noise - Residential: 2,053
+- Illegal Parking: 1,891
+- Noise - Street/Sidewalk: 747
+- Blocked Driveway: 594
+- Noise - Commercial: 454
 
 #### Best hyperparameters (`data/nyc311_best_hyperparams.json`)
 - n_estimators: 50
 - max_samples: auto
 - contamination: 0.0100
 - Predicted anomaly rate: 0.0100
-- Score gap (P50-P01): 0.0297
+- Score gap (P50-P01): 0.0333
 
 #### Hyperparameter search top runs (`data/hyperparam_search_results.csv`)
-| Rank | n_estimators | max_samples | contamination |    score_gap_p50_p01 | predicted_anomaly_rate |
-|-----:|-------------:|------------:|--------------:|---------------------:|-----------------------:|
-|    1 |           50 |        auto |          0.01 | 0.029682558539338988 |                   0.01 |
-|    2 |           50 |        auto |          0.05 | 0.029682558539338988 |                   0.05 |
-|    3 |           50 |         0.9 |          0.01 |  0.02474464820070449 |                   0.01 |
-|    4 |           50 |         0.9 |          0.05 |  0.02474464820070449 |                 0.0499 |
-|    5 |           50 |         0.7 |          0.01 | 0.024331521697321112 |                 0.0099 |
+| Rank | n_estimators | max_samples | contamination | score_gap_p50_p01 | predicted_anomaly_rate |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 50 | auto | 0.01 | 0.03332024937069611 | 0.01 |
+| 2 | 50 | auto | 0.05 | 0.03332024937069611 | 0.05 |
+| 3 | 100 | auto | 0.01 | 0.02570455356871454 | 0.01 |
+| 4 | 100 | auto | 0.05 | 0.02570455356871454 | 0.05 |
+| 5 | 50 | 0.7 | 0.01 | 0.022781066534936834 | 0.01 |
 
 #### Anomaly score distribution (`data/anomaly_score_hist.png`)
 ![Latest anomaly score histogram](data/anomaly_score_hist.png)

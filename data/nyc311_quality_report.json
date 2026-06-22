@@ -34,49 +34,49 @@
   "missing_values": {
     "unique_key": 0,
     "created_date": 0,
-    "closed_date": 5023,
+    "closed_date": 4101,
     "agency": 0,
     "complaint_type": 0,
-    "descriptor": 188,
-    "location_type": 1839,
-    "incident_zip": 87,
+    "descriptor": 250,
+    "location_type": 882,
+    "incident_zip": 59,
     "city": 607,
     "borough": 0,
-    "latitude": 201,
-    "longitude": 201
+    "latitude": 140,
+    "longitude": 140
   },
   "missing_pct": {
     "unique_key": 0.0,
     "created_date": 0.0,
-    "closed_date": 50.23,
+    "closed_date": 41.01,
     "agency": 0.0,
     "complaint_type": 0.0,
-    "descriptor": 1.88,
-    "location_type": 18.39,
-    "incident_zip": 0.87,
+    "descriptor": 2.5,
+    "location_type": 8.82,
+    "incident_zip": 0.59,
     "city": 6.07,
     "borough": 0.0,
-    "latitude": 2.01,
-    "longitude": 2.01
+    "latitude": 1.4,
+    "longitude": 1.4
   },
   "top_complaint_types": {
-    "Illegal Parking": 1526,
-    "Noise - Residential": 742,
-    "Water System": 644,
-    "Noise - Street/Sidewalk": 558,
-    "Blocked Driveway": 494,
-    "Damaged Tree": 367,
-    "UNSANITARY CONDITION": 319,
-    "Street Condition": 289,
-    "Traffic Signal Condition": 228,
-    "PLUMBING": 211
+    "Noise - Residential": 1950,
+    "Illegal Parking": 1682,
+    "Noise - Street/Sidewalk": 1451,
+    "Blocked Driveway": 551,
+    "Noise - Commercial": 258,
+    "Noise - Vehicle": 255,
+    "Dirty Condition": 195,
+    "UNSANITARY CONDITION": 194,
+    "Water System": 191,
+    "Street Condition": 163
   },
   "borough_distribution": {
-    "BROOKLYN": 3036,
-    "QUEENS": 2715,
-    "BRONX": 2004,
-    "MANHATTAN": 1816,
-    "STATEN ISLAND": 415,
-    "Unspecified": 14
+    "BROOKLYN": 3006,
+    "QUEENS": 2674,
+    "BRONX": 2029,
+    "MANHATTAN": 1941,
+    "STATEN ISLAND": 343,
+    "Unspecified": 7
   }
 }

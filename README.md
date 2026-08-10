@@ -125,34 +125,34 @@ This repository includes a scheduled workflow at `.github/workflows/weekly-nyc31
 
 <!-- AUTO_REPORT_START -->
 ### Weekly Automated Report Snapshot
-_Last updated: 2026-08-03 11:04 UTC_
+_Last updated: 2026-08-10 10:28 UTC_
 
 #### Data quality report (`data/nyc311_quality_report.json`)
 - Row count: 10,000
 - Column count: 12
 - Duplicate rows: 0
 - Top complaint types:
-- Noise - Residential: 1,625
-- Noise - Street/Sidewalk: 1,576
-- Illegal Parking: 1,517
-- Blocked Driveway: 462
-- Noise - Commercial: 286
+- Illegal Parking: 1,550
+- Noise - Street/Sidewalk: 1,408
+- Noise - Residential: 1,357
+- Blocked Driveway: 533
+- Water Maintenance: 469
 
 #### Best hyperparameters (`data/nyc311_best_hyperparams.json`)
 - n_estimators: 50
 - max_samples: auto
 - contamination: 0.0100
-- Predicted anomaly rate: 0.0100
-- Score gap (P50-P01): 0.0315
+- Predicted anomaly rate: 0.0091
+- Score gap (P50-P01): 0.0288
 
 #### Hyperparameter search top runs (`data/hyperparam_search_results.csv`)
 | Rank | n_estimators | max_samples | contamination | score_gap_p50_p01 | predicted_anomaly_rate |
 |---:|---:|---:|---:|---:|---:|
-| 1 | 50 | auto | 0.01 | 0.031464621778317936 | 0.01 |
-| 2 | 50 | auto | 0.05 | 0.031464621778317936 | 0.05 |
-| 3 | 50 | 0.9 | 0.01 | 0.02276643179309018 | 0.01 |
-| 4 | 50 | 0.9 | 0.05 | 0.02276643179309018 | 0.05 |
-| 5 | 50 | 0.7 | 0.01 | 0.02266805253727372 | 0.01 |
+| 1 | 50 | auto | 0.01 | 0.028803594016421907 | 0.0091 |
+| 2 | 50 | auto | 0.05 | 0.028803594016421907 | 0.05 |
+| 3 | 50 | 0.9 | 0.01 | 0.022899799081559702 | 0.01 |
+| 4 | 50 | 0.9 | 0.05 | 0.022899799081559702 | 0.05 |
+| 5 | 50 | 0.7 | 0.01 | 0.022016363148468998 | 0.01 |
 
 #### Anomaly score distribution (`data/anomaly_score_hist.png`)
 ![Latest anomaly score histogram](data/anomaly_score_hist.png)
